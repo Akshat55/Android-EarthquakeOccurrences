@@ -18,7 +18,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Utils {
 
     private static final String LOG_TAG = Utils.class.getSimpleName();
@@ -32,6 +31,8 @@ public class Utils {
         }catch (IOException e){
             Log.e(LOG_TAG, "Error closing input stream", e);
         }
+
+        System.out.println(jsonResponse);
         return extractFeatureFromJson(jsonResponse);
     }
 

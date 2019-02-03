@@ -11,11 +11,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EarthquakeListActivity extends AppCompatActivity {
-
 
     ListView list;
 
@@ -27,23 +25,20 @@ public class EarthquakeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_earthquake_list);
 
-        Intent intent = getIntent();
-        String intentExtra1 = intent.getStringExtra("order");
-        String intentExtra3 = intent.getStringExtra("limit");
-        String intentExtra4 = intent.getStringExtra("start");
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.stringURL);
-        stringBuilder.append(intentExtra4);
-        stringBuilder.append("&limit=");
-        stringBuilder.append(intentExtra3);
-        stringBuilder.append("&orderby=");
-        stringBuilder.append(intentExtra1);
 
-        System.out.println(stringBuilder.toString());
-        this.stringURL = stringBuilder.toString();
+        Intent intent = getIntent();
+        String order = intent.getStringExtra("order");
+        String limitDisplay = intent.getStringExtra("limit");
+        String startTime = intent.getStringExtra("start");
+
+        this.stringURL = stringURL + startTime + "&limit=" + limitDisplay + "&orderby=" + order;
         new QuakeAsyncTask(this).execute(this.stringURL);
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(EarthquakeListActivity.this, MainActivity.class));
+    }
 
     private static class QuakeAsyncTask extends AsyncTask<String, Void, List<String>> {
 
@@ -68,6 +63,7 @@ public class EarthquakeListActivity extends AppCompatActivity {
             if (activity == null || activity.isFinishing()) {
                 return;
             }
+
             CustomListAdapter arrayAdapter = new CustomListAdapter(activity, postExecuteResult);
             activity.list = activity.findViewById(R.id.list);
             activity.list.setAdapter(arrayAdapter);
@@ -83,6 +79,7 @@ public class EarthquakeListActivity extends AppCompatActivity {
 
 
                     String url = "https://www.openstreetmap.org/?mlat=" + stringLat + "&mlon=" + stringLng + "#map=5/" + stringLat + "/" + stringLng;
+
                     activity.startActivity(new Intent("android.intent.action.VIEW", Uri.parse(url)));
 
                 }
